@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple, Optional
 
 TruthAssignments = Dict[str, float]
 
@@ -13,6 +13,38 @@ class Rule:
     antecedents: Tuple[str, ...]
     consequent: str
     weight: float = 1.0
+
+
+class ReasoningNode:
+    """A node in a multi-agent reasoning graph."""
+    def __init__(self, name: str, engine: 'SymbolicRuleEngine'):
+        self.name = name
+        self.engine = engine
+        self.peers: List['ReasoningNode'] = []
+        self.local_beliefs: TruthAssignments = {}
+
+    def connect(self, other: 'ReasoningNode'):
+        self.peers.append(other)
+
+    def update_beliefs(self, new_beliefs: TruthAssignments):
+        self.local_beliefs.update(new_beliefs)
+        self.propagate()
+
+    def propagate(self):
+        """Propagate inferred beliefs to peers."""
+        # Simple propagation logic: share derived facts
+        for peer in self.peers:
+            peer.receive_beliefs(self.local_beliefs, source=self.name)
+
+    def receive_beliefs(self, incoming: TruthAssignments, source: str):
+        # Merge logic (e.g., max truth value)
+        changed = False
+        for k, v in incoming.items():
+            if v > self.local_beliefs.get(k, 0.0):
+                self.local_beliefs[k] = v
+                changed = True
+        if changed:
+            print(f"Node {self.name} updated from {source}")
 
 
 class SymbolicRuleEngine:
@@ -27,6 +59,8 @@ class SymbolicRuleEngine:
         while changed:
             changed = False
             for rule in rules:
+                if not rule.antecedents:
+                    continue
                 antecedent_truth = min(state.get(a, 0.0) for a in rule.antecedents)
                 inferred = antecedent_truth * rule.weight
                 if inferred - state.get(rule.consequent, 0.0) > self.threshold:

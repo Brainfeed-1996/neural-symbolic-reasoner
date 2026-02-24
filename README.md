@@ -2,11 +2,16 @@
 
 Hybrid reasoning project combining trainable neural representations with deterministic symbolic inference.
 
-## Complexity tier
+## 📊 Live Dashboard
+[🚀 Intelligence Monitoring](https://neural-symbolic-reasoner-dash.vercel.app)
 
-**Tier 3**: modular symbolic engine + optional neural projection + CI quality gates.
+## Features
+- **Multi-Agent Reasoning**: Propagation nodes for distributed belief updates.
+- **Deep Logic**: Forward-chaining engine with weighted fuzzy rules.
+- **Elite Monitoring**: Real-time dashboard for inference tracking.
 
 ## Architecture
+...
 
 - `src/reasoner.py`
   - `SymbolicReasoner`: lazy torch neural projection layer.
