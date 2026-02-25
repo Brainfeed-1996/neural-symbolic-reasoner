@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Monitoring Dashboard - Elite UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #f8fafc; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-4px); }
+        .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+    </style>
+</head>
+<body class="min-h-screen p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-center mb-12">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">System <span class="text-indigo-500">Intelligence</span></h1>
+                <p class="text-slate-400 mt-1">Real-time model performance & reasoning health</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="flex items-center gap-2 px-4 py-2 glass-panel">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span class="text-sm font-medium">Nodes Active: 12</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="stat-card glass-panel p-6">
+                <p class="text-slate-400 text-sm font-medium mb-1">Inference Latency</p>
+                <div class="flex items-end gap-2">
+                    <span class="text-3xl font-bold">24ms</span>
+                    <span class="text-green-500 text-sm font-bold mb-1">↓ 12%</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel p-6">
+                <p class="text-slate-400 text-sm font-medium mb-1">Reasoning Accuracy</p>
+                <div class="flex items-end gap-2">
+                    <span class="text-3xl font-bold">98.4%</span>
+                    <span class="text-indigo-500 text-sm font-bold mb-1">↑ 0.2%</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel p-6">
+                <p class="text-slate-400 text-sm font-medium mb-1">Agent Sync Rate</p>
+                <div class="flex items-end gap-2">
+                    <span class="text-3xl font-bold">99.9%</span>
+                    <span class="text-slate-500 text-sm font-bold mb-1">Stable</span>
+                </div>
+            </div>
+            <div class="stat-card glass-panel p-6">
+                <p class="text-slate-400 text-sm font-medium mb-1">CV Heatmap Peak</p>
+                <div class="flex items-end gap-2">
+                    <span class="text-3xl font-bold">0.92</span>
+                    <span class="text-red-500 text-sm font-bold mb-1">Alert</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 glass-panel p-8">
+                <h3 class="text-xl font-bold mb-6">Inference Throughput</h3>
+                <canvas id="throughputChart" height="200"></canvas>
+            </div>
+            <div class="glass-panel p-8">
+                <h3 class="text-xl font-bold mb-6">Multi-Agent Propagation</h3>
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-indigo-500/20 text-indigo-400 rounded-lg flex items-center justify-center font-bold">A1</div>
+                            <span class="font-medium">Logic Node Alpha</span>
+                        </div>
+                        <span class="text-green-500 text-sm">Online</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center font-bold">B1</div>
+                            <span class="font-medium">CV Processor Beta</span>
+                        </div>
+                        <span class="text-green-500 text-sm">Online</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center font-bold">G1</div>
+                            <span class="font-medium">Gateway Node Gamma</span>
+                        </div>
+                        <span class="text-amber-500 text-sm">Syncing</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('throughputChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['12:00', '12:05', '12:10', '12:15', '12:20', '12:25'],
+                datasets: [{
+                    label: 'Inferences / min',
+                    data: [450, 520, 480, 610, 590, 640],
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
